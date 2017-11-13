@@ -19,15 +19,17 @@ def speech_to_text():
     label_file = os.path.join(os.getcwd(), 'data', 'doc', 'trans', 'train.word.txt')
     speech_loader = SpeechLoader(wav_path, label_file, batch_size=1, n_mfcc=60)
 
+
     # load model
     model = Model(speech_loader.vocab_size, n_mfcc=n_mfcc, is_training=False)
 
-    saver = tf.train.Saver()
+    saver = tf.train.Saver(tf.trainable_variables())
 
     with tf.Session() as sess:
+        saver.restore(sess, tf.train.latest_checkpoint('model'))
         for j in range(750,755):
             # extract feature
-            wav_file = os.path.join(os.getcwd(), 'data', 'wav', 'test', 'D4', 'D4_' + str(j) + '.wav')
+            wav_file = os.path.join(os.getcwd(),'data','wav','test','D4','D4_'+str(j)+'.wav')
             wav, sr = librosa.load(wav_file, mono=True)
             mfcc = np.transpose(np.expand_dims(librosa.feature.mfcc(wav, sr, n_mfcc=n_mfcc), axis=0), [0,2,1])
             mfcc = mfcc.tolist()
@@ -40,12 +42,12 @@ def speech_to_text():
             wmap = {value:key for key, value in speech_loader.wordmap.items()}
 
             # recognition
-            saver.restore(sess, tf.train.latest_checkpoint('model'))
+
             decoded = tf.transpose(model.logit, perm=[1, 0, 2])
             decoded, probs = tf.nn.ctc_beam_search_decoder(decoded, model.seq_len, top_paths=1, merge_repeated=True)
             predict = tf.sparse_to_dense(decoded[0].indices, decoded[0].dense_shape, decoded[0].values) + 1
             output, probs = sess.run([predict, probs], feed_dict={model.input_data: mfcc})
-            
+
             # print result
             words = ''
             for i in range(len(output[0])):
@@ -58,3 +60,4 @@ def speech_to_text():
 
 if __name__ == '__main__':
         speech_to_text()
+
