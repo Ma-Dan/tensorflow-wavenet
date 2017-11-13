@@ -33,7 +33,7 @@ def speech_to_text():
             mfcc = mfcc.tolist()
 
             # fill 0
-            whilet len(mfcc[0]) < speech_loader.wav_max_len:
+            while len(mfcc[0]) < speech_loader.wav_max_len:
                 mfcc[0].append([0] * n_mfcc)
 
             # word dict
