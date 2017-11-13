@@ -15,7 +15,9 @@ def speech_to_text():
     n_mfcc = 60
 
     # load data
-    speech_loader = SpeechLoader()
+    wav_path = os.path.join(os.getcwd(), 'data', 'wav', 'train')
+    label_file = os.path.join(os.getcwd(), 'data', 'doc', 'trans', 'train.word.txt')
+    speech_loader = SpeechLoader(wav_path, label_file, batch_size=1, n_mfcc=60)
 
     # load model
     model = Model(speech_loader.vocab_size, n_mfcc=n_mfcc, is_training=False)
@@ -25,13 +27,13 @@ def speech_to_text():
     with tf.Session() as sess:
         for j in range(750,755):
             # extract feature
-            wav_file = os.path.join(os.getcwd(),'data','wav','test','D4','D4_'+str(j)+'.wav')
+            wav_file = os.path.join(os.getcwd(), 'data', 'wav', 'test', 'D4', 'D4_' + str(j) + '.wav')
             wav, sr = librosa.load(wav_file, mono=True)
             mfcc = np.transpose(np.expand_dims(librosa.feature.mfcc(wav, sr, n_mfcc=n_mfcc), axis=0), [0,2,1])
             mfcc = mfcc.tolist()
 
             # fill 0
-            while len(mfcc[0]) < speech_loader.wav_max_len:
+            whilet len(mfcc[0]) < speech_loader.wav_max_len:
                 mfcc[0].append([0] * n_mfcc)
 
             # word dict
@@ -56,5 +58,3 @@ def speech_to_text():
 
 if __name__ == '__main__':
         speech_to_text()
-        
-    
