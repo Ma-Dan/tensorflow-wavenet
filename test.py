@@ -4,7 +4,7 @@ from __future__ import print_function
 from model import Model
 from utils import SpeechLoader
 
-import tensorflow as tf  # 1.0.0
+import tensorflow as tf  # 1.4.0
 import numpy as np
 import librosa
 import os
@@ -27,9 +27,9 @@ def speech_to_text():
 
     with tf.Session() as sess:
         saver.restore(sess, tf.train.latest_checkpoint('model'))
-        for j in range(750,755):
+        for j in range(750, 800):
             # extract feature
-            wav_file = os.path.join(os.getcwd(),'data','wav','test','D4','D4_'+str(j)+'.wav')
+            wav_file = os.path.join(os.getcwd(), 'data', 'wav', 'test', 'D4', 'D4_'+str(j)+'.wav')
             wav, sr = librosa.load(wav_file, mono=True)
             mfcc = np.transpose(np.expand_dims(librosa.feature.mfcc(wav, sr, n_mfcc=n_mfcc), axis=0), [0,2,1])
             mfcc = mfcc.tolist()
