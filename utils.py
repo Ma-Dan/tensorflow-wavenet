@@ -41,7 +41,7 @@ class SpeechLoader():
         def handle_file(dirpath, filename):
             if filename.endswith('.wav') or filename.endswith('.WAV'):
                 filename_path = os.path.join(dirpath, filename)
-                if os.stat(filename_path).st_size < 240000:
+                if os.stat(filename_path).st_size < 200000:
                     return
                 return filename_path
 

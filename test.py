@@ -4,11 +4,11 @@ from __future__ import print_function
 from model import Model
 from utils import SpeechLoader
 
-import tensorflow as tf  # 1.4.0
+import tensorflow as tf  # 1.12.0
 import numpy as np
 import librosa
 import os
- 
+
 # 语音识别
 # 把batch_size改为1
 def speech_to_text():
@@ -19,7 +19,6 @@ def speech_to_text():
     label_file = os.path.join(os.getcwd(), 'data', 'doc', 'trans', 'train.word.txt')
     speech_loader = SpeechLoader(wav_path, label_file, batch_size=1, n_mfcc=60)
 
-
     # load model
     model = Model(speech_loader.vocab_size, n_mfcc=n_mfcc, is_training=False)
 
@@ -27,9 +26,9 @@ def speech_to_text():
 
     with tf.Session() as sess:
         saver.restore(sess, tf.train.latest_checkpoint('model'))
-        for j in range(750, 800):
+        for j in range(905, 915):
             # extract feature
-            wav_file = os.path.join(os.getcwd(), 'data', 'wav', 'test', 'D4', 'D4_'+str(j)+'.wav')
+            wav_file = os.path.join(os.getcwd(), 'data', 'wav', 'test', 'D12_'+str(j)+'.wav')
             wav, sr = librosa.load(wav_file, mono=True)
             mfcc = np.transpose(np.expand_dims(librosa.feature.mfcc(wav, sr, n_mfcc=n_mfcc), axis=0), [0,2,1])
             mfcc = mfcc.tolist()
@@ -59,5 +58,5 @@ def speech_to_text():
 
 
 if __name__ == '__main__':
-        speech_to_text()
+    speech_to_text()
 

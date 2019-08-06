@@ -3,13 +3,13 @@
 from __future__ import print_function
 from utils import SpeechLoader
 from model import Model
-import tensorflow as tf #1.4.0
+import tensorflow as tf #1.12.0
 import time
 import os
 
 def train():
     # setting parameters
-    batch_size = 10
+    batch_size = 2
     n_epoch = 100
     n_mfcc = 60
 

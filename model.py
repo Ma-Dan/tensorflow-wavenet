@@ -93,11 +93,12 @@ class Model():
         if self.is_training:
             batch_mean, batch_var = tf.nn.moments(inputs, axes=list(range(len(shape)-1)))
             train_mean = tf.assign(pop_mean, pop_mean*decay+batch_mean*(1-decay))
-            train_var =tf.assign(pop_var, pop_var*decay+batch_var*(1-decay))
+            train_var = tf.assign(pop_var, pop_var*decay+batch_var*(1-decay))
             with tf.control_dependencies([train_mean, train_var]):
                 return tf.nn.batch_normalization(inputs, batch_mean, batch_var, beta, gamma, epsilon)
         else:
-            return tf.nn.batch_normalization(inputs, pop_mean, pop_var, beta, gamma, epsilon)
+            with tf.control_dependencies([]):
+                return tf.nn.batch_normalization(inputs, pop_mean, pop_var, beta, gamma, epsilon)
 
     def activation_wrapper(self, inputs, activation):
         out = inputs
